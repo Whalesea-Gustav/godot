@@ -119,8 +119,8 @@ public:
 				C compare;
 				_FORCE_INLINE_ bool operator()(const T *p_a, const T *p_b) const { return compare(*p_a, *p_b); }
 			};
-			using Element = SelfList<T>;
-			SortList<Element, T *, &Element::_self, &Element::_prev, &Element::_next, PtrComparator> sorter;
+			using Element = SelfList;
+			SortList<Element, T *, value_member, prev_member, next_member, PtrComparator> sorter;
 			sorter.sort(_first, _last);
 		}
 
@@ -143,6 +143,10 @@ private:
 	SelfList<T> *_prev = nullptr;
 
 public:
+	static constexpr T *SelfList::*value_member = &SelfList::_self;
+	static constexpr SelfList *SelfList::*prev_member = &SelfList::_prev;
+	static constexpr SelfList *SelfList::*next_member = &SelfList::_next;
+
 	_FORCE_INLINE_ bool in_list() const { return _root; }
 	_FORCE_INLINE_ void remove_from_list() {
 		if (_root) {
